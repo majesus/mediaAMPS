@@ -1,4 +1,6 @@
 data/
+nueva_validacion.csv
+nuevo_bootstrap.csv
 __pycache__/
 .venv/
 *.pyc

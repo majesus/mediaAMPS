@@ -16,6 +16,11 @@ def weighted_mean(a, w):
 
 def load_amps(data_dir):
     path = Path(data_dir)
+    missing = [f for f in ('catalog.js', 'lectura.csv', 'pesos.csv') if not (path / f).is_file()]
+    if missing:
+        raise FileNotFoundError(
+            f'Faltan {", ".join(missing)} en {path}. Los microdatos no se distribuyen con el '
+            'repositorio: véase la sección «Descargar los datos» del README.')
     content = (path / 'catalog.js').read_text(encoding='utf-8')
     match = re.search(r'const ampsCatalog = (\[.*?\]);', content, re.S)
     if match is None:

@@ -8,7 +8,7 @@ def main():
     parser.add_argument('--data-dir', type=Path, default=Path('data/amps'))
     parser.add_argument('--output', type=Path, default=Path('nueva_validacion.csv'))
     parser.add_argument('--bootstrap', type=int, default=0, help='Remuestras pareadas de personas de evaluación')
-    parser.add_argument('--bootstrap-output', type=Path, default=Path('bootstrap_resultados.csv'))
+    parser.add_argument('--bootstrap-output', type=Path, default=Path('nuevo_bootstrap.csv'))
     args = parser.parse_args()
     if args.bootstrap < 0:
         parser.error('--bootstrap debe ser no negativo')

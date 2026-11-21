@@ -1,9 +1,23 @@
 cff-version: 1.2.0
-message: "If you use this research repository, please cite it."
+message: "Si utiliza este software o sus resultados, cítelo con estos metadatos."
 title: "mediaAMPS: laboratorio de validación de cobertura con AMPS 2011"
 type: software
+version: "1.0.0"
+date-released: "2026-11-21"
+license: MIT
+abstract: >-
+  Código y resultados para comparar modelos de cobertura publicitaria de
+  prensa diaria (H3, CanEx calibrado, independencia y referencia empírica)
+  frente a la recencia de lectura declarada en AMPS 2011.
+keywords:
+  - planificación de medios
+  - cobertura
+  - AMPS
+  - CanEx
+  - microsimulación
 authors:
   - family-names: "Sánchez-Franco"
     given-names: "Manuel J."
     orcid: "https://orcid.org/0000-0002-8042-3550"
+    affiliation: "Universidad de Sevilla"
 repository-code: "https://github.com/majesus/mediaAMPS"

@@ -4,6 +4,8 @@ from itertools import product
 from scipy.stats import norm, binom, betabinom
 from .data import weighted_mean as wm, NWIN, PWD
 
+MAX_CELLS = 5_000_000  # tope de la enumeración exacta (≈ 21^4 en memoria razonable)
+
 def calib(idx, X, OBS, W):
     w = W[idx]; x = X[idx]; y = OBS[idx, :, 0]
     mu = np.zeros(6)
@@ -76,6 +78,11 @@ def canex(p, co, n, q, full=False):
     if np.any((p <= 0) | (p >= 1)) or np.any(n < 1) or np.any(n != n.astype(int)):
         return None
     n = n.astype(int)
+    cells = int(np.prod(n.astype(float) + 1))
+    if cells > MAX_CELLS:
+        raise ValueError(
+            f'La enumeración exacta de CanEx requiere {cells:,} celdas (límite {MAX_CELLS:,}); '
+            'reduzca el número de soportes o de inserciones por soporte.')
     sd = np.sqrt(p * (1 - p)); cor = (co - np.outer(p, p)) / np.outer(sd, sd); np.fill_diagonal(cor, 1)
     if np.linalg.eigvalsh(cor).min() < -1e-8: return None
     fs = []; zs = []
