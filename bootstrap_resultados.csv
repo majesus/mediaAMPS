@@ -1,0 +1,10 @@
+ventana,modelo,referencia,delta_mae_pp,ic95_inf,ic95_sup,n_pareadas,remuestras
+7d,H3 actividad persistente (x entrenamiento),CanEx calibrado (q=E[p^2]),0.11727084731827546,-0.016199769289480498,0.24185009764173998,300,200
+7d,H3 actividad persistente (x entrenamiento),Empírico (entrenamiento),0.29089422767842116,0.08415737823476904,0.42514163763720353,300,200
+7d,H3 actividad persistente (x entrenamiento),Independiente entre ediciones,0.16883048892752162,0.06125147008998035,0.241583370457391,300,200
+14d,H3 actividad persistente (x entrenamiento),CanEx calibrado (q=E[p^2]),-0.4115285863022998,-0.6308728340985301,-0.07994593835392211,300,200
+14d,H3 actividad persistente (x entrenamiento),Empírico (entrenamiento),0.3227949259053143,0.18126903136530575,0.40398707373881976,300,200
+14d,H3 actividad persistente (x entrenamiento),Independiente entre ediciones,0.22688158993174345,0.09569334644581136,0.2869258244461066,300,200
+28d,H3 actividad persistente (x entrenamiento),CanEx calibrado (q=E[p^2]),-2.292488843993571,-2.4557765521902337,-1.6822138400339715,300,200
+28d,H3 actividad persistente (x entrenamiento),Empírico (entrenamiento),0.30672380911588754,0.16144432875809187,0.39054092114456734,300,200
+28d,H3 actividad persistente (x entrenamiento),Independiente entre ediciones,0.1922018572260952,0.013608814511583595,0.2603571170307192,300,200

@@ -37,6 +37,20 @@ La variante H3 que utiliza covariables de las personas de validación obtiene 0,
 
 **Interpretación:** calibrar las entradas de CanEx reduce considerablemente el error. H3 con perfiles de entrenamiento mejora sobre CanEx calibrado en 14 y 28 días, pero no supera sistemáticamente la referencia empírica ni la independencia entre ediciones. La contribución de la persistencia requiere validación adicional.
 
+![Comparación por ventana: error absoluto y sesgo de CanEx calibrado, H3, independencia y referencia empírica](docs/figures/comparacion.svg)
+
+### Incertidumbre de las diferencias
+
+Bootstrap pareado por persona (200 remuestras); diferencia de MAE **H3 menos comparador** e intervalo percentil del 95 %, en pp. Los valores negativos favorecen a H3.
+
+| Ventana | CanEx calibrado | Empírico | Independencia |
+| :--- | ---: | ---: | ---: |
+| 7 d | +0,12 [−0,02; 0,24] | +0,29 [0,08; 0,43] | +0,17 [0,06; 0,24] |
+| 14 d | −0,41 [−0,63; −0,08] | +0,32 [0,18; 0,40] | +0,23 [0,10; 0,29] |
+| 28 d | −2,29 [−2,46; −1,68] | +0,31 [0,16; 0,39] | +0,19 [0,01; 0,26] |
+
+Los intervalos son condicionales al entrenamiento y a las planificaciones: no incluyen la incertidumbre por reestimación ni el diseño complejo de la encuesta. No constituyen una prueba de superioridad general. [Resultados completos](bootstrap_resultados.csv).
+
 ## 3. Cómo funciona
 
 1. Se estima, para cada categoría de frecuencia habitual, la probabilidad de actividad semanal y el número esperado de lecturas cuando existe actividad.
@@ -46,6 +60,8 @@ La variante H3 que utiliza covariables de las personas de validación obtiene 0,
 5. Se estima la cobertura de cada combinación de diarios y se compara con la recencia declarada en una partición de personas reservada.
 
 Se emplean cinco particiones, 60 combinaciones de tres o cuatro diarios y tres ventanas: **900 evaluaciones por modelo**. Las evaluaciones comparten soportes y particiones, por lo que no son 900 observaciones independientes a efectos inferenciales.
+
+La [especificación matemática](docs/metodologia.md) desarrolla las ecuaciones, la calibración, la formulación de CanEx y el procedimiento de validación.
 
 ## 4. Descargar los datos
 
@@ -76,16 +92,34 @@ Para utilizar otra carpeta o evitar sobrescribir los resultados de referencia:
 python amps_recencia.py --data-dir /ruta/a/amps --output nueva_validacion.csv
 ```
 
-El programa imprime los errores y sesgos medios y genera un CSV con los resultados individuales por partición, planificación, ventana y modelo. Utiliza semillas fijadas en el código para facilitar la reproducción.
+El programa imprime los errores y sesgos medios y genera `nueva_validacion.csv`, sin sobrescribir el resultado original. Utiliza semillas fijadas en el código; la ejecución de comprobación reprodujo exactamente las 7.200 filas históricas.
+
+Para ejecutar el bootstrap y las pruebas matemáticas:
+
+```bash
+python amps_recencia.py --data-dir data/amps --bootstrap 200
+python -m unittest discover -s tests -v
+```
+
+Para regenerar la figura:
+
+```bash
+python -m pip install -r requirements-visualization.txt
+python plot_results.py
+```
 
 ## 6. Archivos del repositorio
 
 | Archivo | Función |
 | :--- | :--- |
-| [`amps_recencia.py`](amps_recencia.py) | Calibración, simulación, CanEx y validación |
+| [`amps_recencia.py`](amps_recencia.py) | Interfaz de ejecución |
+| [`mediaamps/data.py`](mediaamps/data.py) | Carga, recodificación y ponderación |
+| [`mediaamps/models.py`](mediaamps/models.py) | Calibración, H3 y CanEx |
+| [`mediaamps/validation.py`](mediaamps/validation.py) | Experimento y bootstrap |
 | [`amps_recencia_resultados.csv`](amps_recencia_resultados.csv) | Resultados desagregados (7.200 filas) |
 | [`amps_recencia_salida.txt`](amps_recencia_salida.txt) | Resumen de la ejecución original |
-| [`requirements.txt`](requirements.txt) | Dependencias de Python |
+| [`tests/`](tests/) | Pruebas matemáticas y fixtures CanEx para R |
+| [`docs/metodologia.md`](docs/metodologia.md) | Especificación matemática |
 
 El CSV contiene `fold` (partición), `plan` (identificador de planificación), `ventana`, `modelo`, `err_abs_pp` (error absoluto en pp) y `sesgo_pp` (predicción menos referencia, en pp).
 
@@ -94,7 +128,7 @@ El CSV contiene `fold` (partición), `plan` (identificador de planificación), `
 - **Recencia, no seguimiento diario:** AMPS es transversal; los parámetros dinámicos se identifican indirectamente mediante momentos de recencia, sujetos a los supuestos del modelo.
 - **Cobertura, no frecuencia completa:** la validación compara eventos de al menos una lectura; no permite observar cuántos contactos se acumularon realmente.
 - **Comparación:** CanEx se ejecuta con una traducción Python de su formulación; no se afirma equivalencia numérica con el paquete R sin una comprobación independiente.
-- **Incertidumbre:** no se presentan intervalos de confianza ni contrastes pareados en esta ejecución. La superioridad predictiva general de H3 no está establecida.
+- **Incertidumbre:** se presentan intervalos bootstrap pareados condicionales, no una reestimación completa ni inferencia ajustada al diseño de encuesta. La superioridad predictiva general de H3 no está establecida.
 
 La continuación natural es validar en un panel longitudinal, controlar los efectos de día y soporte, preservar las marginales y contrastar el valor añadido de cada componente frente a referencias empíricas y probabilísticas.
 
@@ -102,3 +136,7 @@ La continuación natural es validar en un panel longitudinal, controlar los efec
 
 - [mediaPlanR](https://github.com/majesus/mediaPlanR): modelos clásicos de planificación de medios.
 - [mediaPlan](https://mareacultural.com/mediaPlan/): aplicación docente de planificación y análisis de audiencias.
+
+## Licencia y citación
+
+Código y documentación bajo [MIT](LICENSE), en línea con mediaPlanR. Esta licencia **no se extiende a los microdatos de terceros**. Para citar el software, consulta [`CITATION.cff`](CITATION.cff).
